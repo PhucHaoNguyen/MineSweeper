@@ -10,7 +10,7 @@ public class gamestack {
     private Stack<boolean[][]> minesStack;
     private Stack<Integer> numRevealedStack;
 
-    public GameStack(char[][] board, boolean[][] revealed, boolean[][] mines) {
+    public gamestack(char[][] board, boolean[][] revealed, boolean[][] mines) {
         this.board = board;
         this.revealed = revealed;
         this.mines = mines;
@@ -42,10 +42,30 @@ public class gamestack {
     }
 
     public void saveSnapshot() {
-        
+        char[][] snapshotBoard = new char[board.length][board[0].length];
+        boolean[][] snapshotRevealed = new boolean[revealed.length][revealed[0].length];
+        boolean[][] snapshotMines = new boolean[mines.length][mines[0].length];
+
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                snapshotBoard[row][col] = board[row][col];
+                snapshotRevealed[row][col] = revealed[row][col];
+                snapshotMines[row][col] = mines[row][col];
+            }
+        }
+
+        boardStack.push(snapshotBoard);
+        revealedStack.push(snapshotRevealed);
+        minesStack.push(snapshotMines);
+        numRevealedStack.push(numRevealed);
     }
 
     public void undo() {
-        
+        if (canUndo()) {
+            board = boardStack.pop();
+            revealed = revealedStack.pop();
+            mines = minesStack.pop();
+            numRevealed = numRevealedStack.pop();
+        }
     }
 }
