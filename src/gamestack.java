@@ -11,7 +11,14 @@ public class gamestack {
     private Stack<Integer> numRevealedStack;
 
     public GameStack(char[][] board, boolean[][] revealed, boolean[][] mines) {
-        
+        this.board = board;
+        this.revealed = revealed;
+        this.mines = mines;
+        this.numRevealed = 0;
+        this.boardStack = new Stack<>();
+        this.revealedStack = new Stack<>();
+        this.minesStack = new Stack<>();
+        this.numRevealedStack = new Stack<>();
     }
 
     public char[][] getBoard() {
