@@ -54,7 +54,6 @@ public class minesweeper{
     }
 
     private int countAdjacentMines(int row, int col){
-        return count;
     }
 
 }
