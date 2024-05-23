@@ -1,6 +1,7 @@
 import java.util.Random;
 public class minesweeper{
     private Random random;
+    private gamestack gamestack;
     
     private static final char MINE = 'X';
     private static final char UNREVEALED = '|';
@@ -41,7 +42,7 @@ public class minesweeper{
                 numAdded++;
             }
         }
-        GameStack = new GameStack(board, revealed, mines);
+        gamestack = new gamestack(board, revealed, mines);
     }
 
     public void revealCell(){
