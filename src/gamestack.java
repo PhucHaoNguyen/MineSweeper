@@ -1,4 +1,5 @@
 import java.util.Stack;
+
 public class gamestack {
     private char[][] board;
     private boolean[][] revealed;
