@@ -45,15 +45,69 @@ public class minesweeper{
         gamestack = new gamestack(board, revealed, mines);
     }
 
-    public void revealCell(){
+    public void revealCell(int row, int col) {
+        revealed[row][col] = true;
+        numRevealed++;
 
+        if (mines[row][col]) {
+            board[row][col] = MINE;
+            return;
+        }
+
+        int numAdjacentMines = countAdjacentMines(row, col);
+        if (numAdjacentMines == 0) {
+            board[row][col] = ' ';
+            revealAdjacentCells(row, col);
+        } else {
+            board[row][col] = DIGITS[numAdjacentMines];
+        }
     }
 
-    private void revealAdjacentCells(int row, int col){
+    private void revealAdjacentCells(int row, int col) {
+        for (int i = row - 1; i <= row + 1; i++) {
+            for (int j = col - 1; j <= col + 1; j++) {
+                if (i < 0 || i >= 10 || j < 0 || j >= 10) {
+                    continue;
+                }
 
+                if (revealed[i][j] || mines[i][j]) {
+                    continue;
+                }
+
+                revealCell(i, j);
+            }
+        }
     }
 
-    private int countAdjacentMines(int row, int col){
+    private int countAdjacentMines(int row, int col) {
+        int count = 0;
+
+        for (int i = row - 1; i <= row + 1; i++) {
+            for (int j = col - 1; j <= col + 1; j++) {
+                if (i < 0 || i >= 10 || j < 0 || j >= 10) {
+                    continue;
+                }
+
+                if (mines[i][j]) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public void Undo() {
+        if (gamestack.canUndo()) {
+            gamestack.undo();
+            board = gamestack.getBoard();
+            revealed = gamestack.getRevealed();
+            mines = gamestack.getMines();
+            numRevealed = gamestack.getnumRevealed();
+        }
+    }
+
+    public void Save() {
+        gamestack.saveSnapshot();
     }
 
 }
