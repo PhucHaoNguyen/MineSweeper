@@ -64,8 +64,72 @@ enum ButtonImport {
         public int getwidth() {
             return width;
         }
+    private Image[] symbolImages = new Image[SymbolImport.values().length];
+
+    private Image TickImage;
+    private Image CrossImage;
+
+    private Clip musicClip;
+    private boolean BGMOn;
+
+    private boolean revealAll = false;
+    private boolean gameWon = false;
+    private boolean gameLost = false;
+
+    private Point flagLocation = null;
 
         public int getheight() {
             return height;
         }
+    }
+    public GameStart(boolean music, int numMines) {
+        Game.numMines = numMines;
+
+        this.BGMOn = music;
+
+        setPreferredSize(new Dimension(GameSettings.WIDTH, GameSettings.HEIGHT));
+
+        try {
+            File GamePlay = new File("images/GamePlay.png");
+            BufferedImage GamePlayOriginal = ImageIO.read(GamePlay);
+            Image scaledMenu = GamePlayOriginal.getScaledInstance(GameSettings.WIDTH, GameSettings.HEIGHT,
+                    Image.SCALE_SMOOTH);
+            GameImage = scaledMenu;
+
+            for (ButtonImport button : ButtonImport.values()) {
+                File buttonFile = new File(button.getPath());
+                BufferedImage buttonOriginal = ImageIO.read(buttonFile);
+                Image scaledButton;
+
+                if (button == ButtonImport.MUSIC_ON || button == ButtonImport.MUSIC_OFF
+                        || button == ButtonImport.QUIT || button == ButtonImport.UNDO || button == ButtonImport.FLAG) {
+                    scaledButton = buttonOriginal.getScaledInstance(
+                            GameSettings.AdjustWidth(128),
+                            GameSettings.AdjustHeight(128),
+                            Image.SCALE_SMOOTH);
+                } else {
+                    scaledButton = buttonOriginal.getScaledInstance(
+                            GameSettings.AdjustWidth(443),
+                            GameSettings.AdjustHeight(124),
+                            Image.SCALE_SMOOTH);
+                }
+
+                switch (button) {
+                    case QUIT:
+                        QuitImage = scaledButton;
+                        break;
+                    case FLAG:
+                        FlagButtonImage = scaledButton;
+                        break;
+                    case UNDO:
+                        UndoImage = scaledButton;
+                        break;
+                    case MUSIC_ON:
+                        MusicOnImage = scaledButton;
+                        break;
+                    case MUSIC_OFF:
+                        MusicOffImage = scaledButton;
+                        break;
+                }
+            }
     }
