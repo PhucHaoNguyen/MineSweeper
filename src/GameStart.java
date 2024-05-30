@@ -5,6 +5,7 @@ import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.sound.sampled.*;
+
 public class GameStart extends JPanel {
     public GameMinesweeper Game = new GameMinesweeper();
 
@@ -40,6 +41,7 @@ public class GameStart extends JPanel {
             return imagePath;
         }
     }
+    
 enum ButtonImport {
         QUIT("images/QuitButton.png", 120, 124),
         FLAG("images/FlagButton.png", 140, 140),
@@ -82,6 +84,7 @@ enum ButtonImport {
             return height;
         }
     }
+    
     public GameStart(boolean music, int numMines) {
         Game.numMines = numMines;
 
@@ -133,3 +136,42 @@ enum ButtonImport {
                 }
             }
     }
+
+    File bgm = new File("sounds/Music.wav");
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(bgm);
+
+            musicClip = AudioSystem.getClip();
+            musicClip.open(audioIn);
+
+            if (BGMOn) {
+                musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+                musicClip.start();
+            }
+
+            File TickSign = new File("images/Tick.png");
+            BufferedImage TickSignOriginal = ImageIO.read(TickSign);
+            Image scaledTick = TickSignOriginal.getScaledInstance(GameSettings.AdjustWidth(392),
+                    GameSettings.AdjustHeight(368),
+                    Image.SCALE_SMOOTH);
+            TickImage = scaledTick;
+
+            File CrossSign = new File("images/Cross.png");
+            BufferedImage CrossSignOriginal = ImageIO.read(CrossSign);
+            Image scaledCross = CrossSignOriginal.getScaledInstance(GameSettings.AdjustWidth(640),
+                    GameSettings.AdjustHeight(640),
+                    Image.SCALE_SMOOTH);
+            CrossImage = scaledCross;
+
+            for (SymbolImport symbolType : SymbolImport.values()) {
+                File symbolFile = new File(symbolType.getImagePath());
+                BufferedImage symbolImageOriginal = ImageIO.read(symbolFile);
+                Image scaledSymbol = symbolImageOriginal.getScaledInstance(
+                        GameSettings.AdjustWidth(Symbolsize),
+                        GameSettings.AdjustHeight(Symbolsize),
+                        Image.SCALE_SMOOTH);
+                symbolImages[symbolType.ordinal()] = scaledSymbol;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception found: " + e);
+        }
