@@ -135,8 +135,7 @@ enum ButtonImport {
                         break;
                 }
             }
-    }
-
+            
     File bgm = new File("sounds/Music.wav");
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(bgm);
 
@@ -175,3 +174,40 @@ enum ButtonImport {
         } catch (Exception e) {
             System.out.println("Exception found: " + e);
         }
+        Game.initializeBoard();
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int mouseX = e.getX();
+                int mouseY = e.getY();
+                if (!gameWon && !gameLost) {
+                    if (mouseX >= GameSettings.AdjustWidth(1742)
+                            && mouseX <= GameSettings.AdjustWidth(1742) + GameSettings.AdjustWidth(140)
+                            && mouseY >= GameSettings.AdjustHeight(38)
+                            && mouseY <= GameSettings.AdjustHeight(38) + GameSettings.AdjustHeight(140)) {
+                        BGMOn = !BGMOn;
+                        if (BGMOn) {
+                            musicClip.start();
+                        } else {
+                            musicClip.stop();
+                        }
+                        repaint();
+                    }
+
+                    if (mouseX >= GameSettings.AdjustWidth(1080)
+                            && mouseX <= GameSettings.AdjustWidth(1080 + UndoImage.getWidth(null))
+                            && mouseY >= GameSettings.AdjustHeight(698)
+                            && mouseY <= GameSettings.AdjustHeight(698 + UndoImage.getHeight(null))) {
+                        Game.Undo();
+                        repaint();
+                    }
+
+                    if (mouseX >= GameSettings.AdjustWidth(Symbolsize)
+                            && mouseX <= GameSettings.AdjustWidth(Symbolsize * 11)
+                            && mouseY >= GameSettings.AdjustHeight(Symbolsize)
+                            && mouseY <= GameSettings.AdjustHeight(Symbolsize * 11)) {
+                        int row = (int) (mouseY / GameSettings.AdjustHeight(Symbolsize)) - 1;
+                        int col = (int) (mouseX / GameSettings.AdjustWidth(Symbolsize)) - 1;
+
+                        Game.Save();
