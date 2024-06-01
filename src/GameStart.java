@@ -211,3 +211,52 @@ enum ButtonImport {
                         int col = (int) (mouseX / GameSettings.AdjustWidth(Symbolsize)) - 1;
 
                         Game.Save();
+
+                        if (Game.board[row][col] == '-') {
+                            Game.revealCell(row, col);
+                            if (Game.mines[row][col]) {
+                                gameLost = true;
+                                try {
+                                    playlose();
+                                } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
+                                    e1.printStackTrace();
+                                }
+                                repaint();
+
+                            } else if (Game.numRevealed == 100 - Game.numMines) {
+                                gameWon = true;
+                                try {
+                                    playwin();
+                                } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
+                                    e1.printStackTrace();
+                                }
+                                repaint();
+                            } else {
+                                repaint();
+                            }
+                        }
+                    }
+                }
+
+                if (mouseX >= GameSettings.AdjustWidth(1080)
+                        && mouseX <= GameSettings.AdjustWidth(1080 + UndoImage.getWidth(null))
+                        && mouseY >= GameSettings.AdjustHeight(858)
+                        && mouseY <= GameSettings.AdjustHeight(858 + UndoImage.getHeight(null))) {
+                    System.exit(0);
+                }
+            }
+
+        });
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (!gameWon && !gameLost) {
+                    if (e.getX() >= GameSettings.AdjustWidth(1578)
+                            && e.getX() <= GameSettings.AdjustWidth(1578) + GameSettings.AdjustWidth(140)
+                            && e.getY() >= GameSettings.AdjustHeight(38)
+                            && e.getY() <= GameSettings.AdjustHeight(38) + GameSettings.AdjustHeight(140)) {
+                        flagLocation = e.getPoint();
+                    }
+                }
+            }
