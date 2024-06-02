@@ -260,3 +260,55 @@ enum ButtonImport {
                     }
                 }
             }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (flagLocation != null) {
+                    int x = e.getX();
+                    int y = e.getY();
+
+                    if (x >= GameSettings.AdjustWidth(Symbolsize)
+                            && x <= GameSettings.AdjustWidth(Symbolsize * 11)
+                            && y >= GameSettings.AdjustHeight(Symbolsize)
+                            && y <= GameSettings.AdjustHeight(Symbolsize * 11)) {
+                        int row = (int) (y / GameSettings.AdjustHeight(Symbolsize)) - 1;
+                        int col = (int) (x / GameSettings.AdjustWidth(Symbolsize)) - 1;
+                        Game.Save();
+                        if (Game.board[row][col] == '-') {
+                            Game.board[row][col] = 'F';
+                        } else if (Game.board[row][col] == 'F') {
+                            Game.board[row][col] = '-';
+                        }
+                    }
+                    flagLocation = null;
+                    repaint();
+                }
+            }
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (flagLocation != null) {
+                    flagLocation.setLocation(e.getPoint());
+                    repaint();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        g.drawImage(GameImage, 0, 0, this);
+
+        if (BGMOn) {
+            g.drawImage(MusicOnImage, GameSettings.AdjustWidth(1742), GameSettings.AdjustHeight(38), this);
+        } else {
+            g.drawImage(MusicOffImage, GameSettings.AdjustWidth(1742), GameSettings.AdjustHeight(38), this);
+        }
+
+        g.drawImage(FlagButtonImage, GameSettings.AdjustWidth(1578), GameSettings.AdjustHeight(38), this);
+        g.drawImage(UndoImage, GameSettings.AdjustWidth(1080), GameSettings.AdjustHeight(698), this);
+        g.drawImage(QuitImage, GameSettings.AdjustWidth(1080), GameSettings.AdjustHeight(858), this);
