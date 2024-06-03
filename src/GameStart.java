@@ -312,3 +312,51 @@ enum ButtonImport {
         g.drawImage(FlagButtonImage, GameSettings.AdjustWidth(1578), GameSettings.AdjustHeight(38), this);
         g.drawImage(UndoImage, GameSettings.AdjustWidth(1080), GameSettings.AdjustHeight(698), this);
         g.drawImage(QuitImage, GameSettings.AdjustWidth(1080), GameSettings.AdjustHeight(858), this);
+
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
+                if (Game.mines[row][col] && (revealAll || Game.revealed[row][col])) {
+                    g.drawImage(symbolImages[SymbolImport.MINE.ordinal()],
+                            GameSettings.AdjustWidth(Symbolsize * (col + 1)),
+                            GameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                }
+
+                else if (Game.board[row][col] == 'F') {
+                    g.drawImage(symbolImages[SymbolImport.UNREVEALED.ordinal()],
+                            GameSettings.AdjustWidth(Symbolsize * (col + 1)),
+                            GameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                    g.drawImage(symbolImages[SymbolImport.FLAG.ordinal()],
+                            GameSettings.AdjustWidth(Symbolsize * (col + 1)),
+                            GameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                }
+
+                else if (Game.revealed[row][col]) {
+                    SymbolImport symbolType = null;
+                    switch (Game.board[row][col]) {
+                        case '1':
+                            symbolType = SymbolImport.ONE;
+                            break;
+                        case '2':
+                            symbolType = SymbolImport.TWO;
+                            break;
+                        case '3':
+                            symbolType = SymbolImport.THREE;
+                            break;
+                        case '4':
+                            symbolType = SymbolImport.FOUR;
+                            break;
+                        case '5':
+                            symbolType = SymbolImport.FIVE;
+                            break;
+                        case '6':
+                            symbolType = SymbolImport.SIX;
+                            break;
+                        case '7':
+                            symbolType = SymbolImport.SEVEN;
+                            break;
+                        case '8':
+                            symbolType = SymbolImport.EIGHT;
+                            break;
+                        default:
+                            break;
+                    }
