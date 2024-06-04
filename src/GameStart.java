@@ -360,3 +360,62 @@ enum ButtonImport {
                         default:
                             break;
                     }
+
+                    if (symbolType != null) {
+                        g.drawImage(symbolImages[symbolType.ordinal()],
+                                GameSettings.AdjustWidth(Symbolsize * (col + 1)),
+                                GameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                    }
+                }
+
+                else {
+                    g.drawImage(symbolImages[SymbolImport.UNREVEALED.ordinal()],
+                            GameSettings.AdjustWidth(Symbolsize * (col + 1)),
+                            GameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                }
+            }
+        }
+
+        if (flagLocation != null) {
+            g.drawImage(symbolImages[SymbolImport.FLAG.ordinal()],
+                    (int) flagLocation.getX() - (int) (GameSettings.AdjustWidth(Symbolsize) / 2),
+                    (int) flagLocation.getY() - (int) (GameSettings.AdjustHeight(Symbolsize) / 2), this);
+        }
+
+        if (this.gameWon == true) {
+            g.drawImage(TickImage, GameSettings.AdjustWidth(384), GameSettings.AdjustHeight(384), this);
+        }
+
+        if (this.gameLost == true) {
+            g.drawImage(CrossImage, GameSettings.AdjustWidth(220), GameSettings.AdjustHeight(220), this);
+        }
+
+    }
+
+    public void playwin() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        Clip clip;
+        BGMOn = false;
+        musicClip.stop();
+        revealAll = true;
+
+        File win = new File("sounds/clear.wav");
+        AudioInputStream audioIn2 = AudioSystem.getAudioInputStream(win);
+        clip = AudioSystem.getClip();
+        clip.open(audioIn2);
+        clip.start();
+
+    }
+
+    public void playlose() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        Clip clip;
+        BGMOn = false;
+        musicClip.stop();
+        revealAll = true;
+
+        File lose = new File("sounds/gameover.wav");
+        AudioInputStream audioIn3 = AudioSystem.getAudioInputStream(lose);
+        clip = AudioSystem.getClip();
+        clip.open(audioIn3);
+        clip.start();
+    }
+}
