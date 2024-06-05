@@ -3,8 +3,8 @@ public class minesweeper{
     private Random random;
     private gamestack gamestack;
     
-    private static final char MINE = 'X';
-    private static final char UNREVEALED = '|';
+    private static final char MINE = '*';
+    private static final char UNREVEALED = '-';
     private static final char[] DIGITS = {'0','1','2','3','4','5','6','7','8'};
     //Setting up the number of mines near by in a 3x3 space around the place revealed
 
