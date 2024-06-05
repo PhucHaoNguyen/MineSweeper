@@ -3,11 +3,11 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import javax.sound.sampled.*;
+import javax.swing.*;
 
 public class gamestart extends JPanel {
-    public GameMinesweeper Game = new GameMinesweeper();
+    public minesweeper Game = new minesweeper();
 
     private static final int Symbolsize = 90;
 
@@ -42,7 +42,7 @@ public class gamestart extends JPanel {
         }
     }
     
-enum ButtonImport {
+    enum ButtonImport {
         QUIT("images/QuitButton.png", 120, 124),
         FLAG("images/FlagButton.png", 140, 140),
         UNDO("images/UndoButton.png", 443, 124),
@@ -63,9 +63,15 @@ enum ButtonImport {
             return this.path;
         }
 
+        public int getheight() {
+            return height;
+        }
+
         public int getwidth() {
             return width;
         }
+    }
+
     private Image[] symbolImages = new Image[SymbolImport.values().length];
 
     private Image TickImage;
@@ -79,23 +85,18 @@ enum ButtonImport {
     private boolean gameLost = false;
 
     private Point flagLocation = null;
-
-        public int getheight() {
-            return height;
-        }
-    }
     
     public gamestart(boolean music, int numMines) {
         Game.numMines = numMines;
 
         this.BGMOn = music;
 
-        setPreferredSize(new Dimension(GameSettings.WIDTH, GameSettings.HEIGHT));
+        setPreferredSize(new Dimension(gameSettings.WIDTH, gameSettings.HEIGHT));
 
         try {
             File GamePlay = new File("images/GamePlay.png");
             BufferedImage GamePlayOriginal = ImageIO.read(GamePlay);
-            Image scaledMenu = GamePlayOriginal.getScaledInstance(GameSettings.WIDTH, GameSettings.HEIGHT,
+            Image scaledMenu = GamePlayOriginal.getScaledInstance(gameSettings.WIDTH, gameSettings.HEIGHT,
                     Image.SCALE_SMOOTH);
             GameImage = scaledMenu;
 
@@ -107,13 +108,13 @@ enum ButtonImport {
                 if (button == ButtonImport.MUSIC_ON || button == ButtonImport.MUSIC_OFF
                         || button == ButtonImport.QUIT || button == ButtonImport.UNDO || button == ButtonImport.FLAG) {
                     scaledButton = buttonOriginal.getScaledInstance(
-                            GameSettings.AdjustWidth(128),
-                            GameSettings.AdjustHeight(128),
+                            gameSettings.AdjustWidth(128),
+                            gameSettings.AdjustHeight(128),
                             Image.SCALE_SMOOTH);
                 } else {
                     scaledButton = buttonOriginal.getScaledInstance(
-                            GameSettings.AdjustWidth(443),
-                            GameSettings.AdjustHeight(124),
+                            gameSettings.AdjustWidth(443),
+                            gameSettings.AdjustHeight(124),
                             Image.SCALE_SMOOTH);
                 }
 
@@ -149,15 +150,15 @@ enum ButtonImport {
 
             File TickSign = new File("images/Tick.png");
             BufferedImage TickSignOriginal = ImageIO.read(TickSign);
-            Image scaledTick = TickSignOriginal.getScaledInstance(GameSettings.AdjustWidth(392),
-                    GameSettings.AdjustHeight(368),
+            Image scaledTick = TickSignOriginal.getScaledInstance(gameSettings.AdjustWidth(392),
+                    gameSettings.AdjustHeight(368),
                     Image.SCALE_SMOOTH);
             TickImage = scaledTick;
 
             File CrossSign = new File("images/Cross.png");
             BufferedImage CrossSignOriginal = ImageIO.read(CrossSign);
-            Image scaledCross = CrossSignOriginal.getScaledInstance(GameSettings.AdjustWidth(640),
-                    GameSettings.AdjustHeight(640),
+            Image scaledCross = CrossSignOriginal.getScaledInstance(gameSettings.AdjustWidth(640),
+                    gameSettings.AdjustHeight(640),
                     Image.SCALE_SMOOTH);
             CrossImage = scaledCross;
 
@@ -165,8 +166,8 @@ enum ButtonImport {
                 File symbolFile = new File(symbolType.getImagePath());
                 BufferedImage symbolImageOriginal = ImageIO.read(symbolFile);
                 Image scaledSymbol = symbolImageOriginal.getScaledInstance(
-                        GameSettings.AdjustWidth(Symbolsize),
-                        GameSettings.AdjustHeight(Symbolsize),
+                        gameSettings.AdjustWidth(Symbolsize),
+                        gameSettings.AdjustHeight(Symbolsize),
                         Image.SCALE_SMOOTH);
                 symbolImages[symbolType.ordinal()] = scaledSymbol;
             }
@@ -174,6 +175,7 @@ enum ButtonImport {
         } catch (Exception e) {
             System.out.println("Exception found: " + e);
         }
+        
         Game.initializeBoard();
 
         addMouseListener(new MouseAdapter() {
@@ -182,10 +184,10 @@ enum ButtonImport {
                 int mouseX = e.getX();
                 int mouseY = e.getY();
                 if (!gameWon && !gameLost) {
-                    if (mouseX >= GameSettings.AdjustWidth(1742)
-                            && mouseX <= GameSettings.AdjustWidth(1742) + GameSettings.AdjustWidth(140)
-                            && mouseY >= GameSettings.AdjustHeight(38)
-                            && mouseY <= GameSettings.AdjustHeight(38) + GameSettings.AdjustHeight(140)) {
+                    if (mouseX >= gameSettings.AdjustWidth(1742)
+                            && mouseX <= gameSettings.AdjustWidth(1742) + gameSettings.AdjustWidth(140)
+                            && mouseY >= gameSettings.AdjustHeight(38)
+                            && mouseY <= gameSettings.AdjustHeight(38) + gameSettings.AdjustHeight(140)) {
                         BGMOn = !BGMOn;
                         if (BGMOn) {
                             musicClip.start();
@@ -195,20 +197,20 @@ enum ButtonImport {
                         repaint();
                     }
 
-                    if (mouseX >= GameSettings.AdjustWidth(1080)
-                            && mouseX <= GameSettings.AdjustWidth(1080 + UndoImage.getWidth(null))
-                            && mouseY >= GameSettings.AdjustHeight(698)
-                            && mouseY <= GameSettings.AdjustHeight(698 + UndoImage.getHeight(null))) {
+                    if (mouseX >= gameSettings.AdjustWidth(1080)
+                            && mouseX <= gameSettings.AdjustWidth(1080 + UndoImage.getWidth(null))
+                            && mouseY >= gameSettings.AdjustHeight(698)
+                            && mouseY <= gameSettings.AdjustHeight(698 + UndoImage.getHeight(null))) {
                         Game.Undo();
                         repaint();
                     }
 
-                    if (mouseX >= GameSettings.AdjustWidth(Symbolsize)
-                            && mouseX <= GameSettings.AdjustWidth(Symbolsize * 11)
-                            && mouseY >= GameSettings.AdjustHeight(Symbolsize)
-                            && mouseY <= GameSettings.AdjustHeight(Symbolsize * 11)) {
-                        int row = (int) (mouseY / GameSettings.AdjustHeight(Symbolsize)) - 1;
-                        int col = (int) (mouseX / GameSettings.AdjustWidth(Symbolsize)) - 1;
+                    if (mouseX >= gameSettings.AdjustWidth(Symbolsize)
+                            && mouseX <= gameSettings.AdjustWidth(Symbolsize * 11)
+                            && mouseY >= gameSettings.AdjustHeight(Symbolsize)
+                            && mouseY <= gameSettings.AdjustHeight(Symbolsize * 11)) {
+                        int row = (int) (mouseY / gameSettings.AdjustHeight(Symbolsize)) - 1;
+                        int col = (int) (mouseX / gameSettings.AdjustWidth(Symbolsize)) - 1;
 
                         Game.Save();
 
@@ -238,10 +240,10 @@ enum ButtonImport {
                     }
                 }
 
-                if (mouseX >= GameSettings.AdjustWidth(1080)
-                        && mouseX <= GameSettings.AdjustWidth(1080 + UndoImage.getWidth(null))
-                        && mouseY >= GameSettings.AdjustHeight(858)
-                        && mouseY <= GameSettings.AdjustHeight(858 + UndoImage.getHeight(null))) {
+                if (mouseX >= gameSettings.AdjustWidth(1080)
+                        && mouseX <= gameSettings.AdjustWidth(1080 + UndoImage.getWidth(null))
+                        && mouseY >= gameSettings.AdjustHeight(858)
+                        && mouseY <= gameSettings.AdjustHeight(858 + UndoImage.getHeight(null))) {
                     System.exit(0);
                 }
             }
@@ -252,10 +254,10 @@ enum ButtonImport {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (!gameWon && !gameLost) {
-                    if (e.getX() >= GameSettings.AdjustWidth(1578)
-                            && e.getX() <= GameSettings.AdjustWidth(1578) + GameSettings.AdjustWidth(140)
-                            && e.getY() >= GameSettings.AdjustHeight(38)
-                            && e.getY() <= GameSettings.AdjustHeight(38) + GameSettings.AdjustHeight(140)) {
+                    if (e.getX() >= gameSettings.AdjustWidth(1578)
+                            && e.getX() <= gameSettings.AdjustWidth(1578) + gameSettings.AdjustWidth(140)
+                            && e.getY() >= gameSettings.AdjustHeight(38)
+                            && e.getY() <= gameSettings.AdjustHeight(38) + gameSettings.AdjustHeight(140)) {
                         flagLocation = e.getPoint();
                     }
                 }
@@ -267,12 +269,12 @@ enum ButtonImport {
                     int x = e.getX();
                     int y = e.getY();
 
-                    if (x >= GameSettings.AdjustWidth(Symbolsize)
-                            && x <= GameSettings.AdjustWidth(Symbolsize * 11)
-                            && y >= GameSettings.AdjustHeight(Symbolsize)
-                            && y <= GameSettings.AdjustHeight(Symbolsize * 11)) {
-                        int row = (int) (y / GameSettings.AdjustHeight(Symbolsize)) - 1;
-                        int col = (int) (x / GameSettings.AdjustWidth(Symbolsize)) - 1;
+                    if (x >= gameSettings.AdjustWidth(Symbolsize)
+                            && x <= gameSettings.AdjustWidth(Symbolsize * 11)
+                            && y >= gameSettings.AdjustHeight(Symbolsize)
+                            && y <= gameSettings.AdjustHeight(Symbolsize * 11)) {
+                        int row = (int) (y / gameSettings.AdjustHeight(Symbolsize)) - 1;
+                        int col = (int) (x / gameSettings.AdjustWidth(Symbolsize)) - 1;
                         Game.Save();
                         if (Game.board[row][col] == '-') {
                             Game.board[row][col] = 'F';
@@ -304,30 +306,30 @@ enum ButtonImport {
         g.drawImage(GameImage, 0, 0, this);
 
         if (BGMOn) {
-            g.drawImage(MusicOnImage, GameSettings.AdjustWidth(1742), GameSettings.AdjustHeight(38), this);
+            g.drawImage(MusicOnImage, gameSettings.AdjustWidth(1742), gameSettings.AdjustHeight(38), this);
         } else {
-            g.drawImage(MusicOffImage, GameSettings.AdjustWidth(1742), GameSettings.AdjustHeight(38), this);
+            g.drawImage(MusicOffImage, gameSettings.AdjustWidth(1742), gameSettings.AdjustHeight(38), this);
         }
 
-        g.drawImage(FlagButtonImage, GameSettings.AdjustWidth(1578), GameSettings.AdjustHeight(38), this);
-        g.drawImage(UndoImage, GameSettings.AdjustWidth(1080), GameSettings.AdjustHeight(698), this);
-        g.drawImage(QuitImage, GameSettings.AdjustWidth(1080), GameSettings.AdjustHeight(858), this);
+        g.drawImage(FlagButtonImage, gameSettings.AdjustWidth(1578), gameSettings.AdjustHeight(38), this);
+        g.drawImage(UndoImage, gameSettings.AdjustWidth(1080), gameSettings.AdjustHeight(698), this);
+        g.drawImage(QuitImage, gameSettings.AdjustWidth(1080), gameSettings.AdjustHeight(858), this);
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if (Game.mines[row][col] && (revealAll || Game.revealed[row][col])) {
                     g.drawImage(symbolImages[SymbolImport.MINE.ordinal()],
-                            GameSettings.AdjustWidth(Symbolsize * (col + 1)),
-                            GameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                            gameSettings.AdjustWidth(Symbolsize * (col + 1)),
+                            gameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
                 }
 
                 else if (Game.board[row][col] == 'F') {
                     g.drawImage(symbolImages[SymbolImport.UNREVEALED.ordinal()],
-                            GameSettings.AdjustWidth(Symbolsize * (col + 1)),
-                            GameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                            gameSettings.AdjustWidth(Symbolsize * (col + 1)),
+                            gameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
                     g.drawImage(symbolImages[SymbolImport.FLAG.ordinal()],
-                            GameSettings.AdjustWidth(Symbolsize * (col + 1)),
-                            GameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                            gameSettings.AdjustWidth(Symbolsize * (col + 1)),
+                            gameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
                 }
 
                 else if (Game.revealed[row][col]) {
@@ -363,31 +365,31 @@ enum ButtonImport {
 
                     if (symbolType != null) {
                         g.drawImage(symbolImages[symbolType.ordinal()],
-                                GameSettings.AdjustWidth(Symbolsize * (col + 1)),
-                                GameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                                gameSettings.AdjustWidth(Symbolsize * (col + 1)),
+                                gameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
                     }
                 }
 
                 else {
                     g.drawImage(symbolImages[SymbolImport.UNREVEALED.ordinal()],
-                            GameSettings.AdjustWidth(Symbolsize * (col + 1)),
-                            GameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                            gameSettings.AdjustWidth(Symbolsize * (col + 1)),
+                            gameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
                 }
             }
         }
 
         if (flagLocation != null) {
             g.drawImage(symbolImages[SymbolImport.FLAG.ordinal()],
-                    (int) flagLocation.getX() - (int) (GameSettings.AdjustWidth(Symbolsize) / 2),
-                    (int) flagLocation.getY() - (int) (GameSettings.AdjustHeight(Symbolsize) / 2), this);
+                    (int) flagLocation.getX() - (int) (gameSettings.AdjustWidth(Symbolsize) / 2),
+                    (int) flagLocation.getY() - (int) (gameSettings.AdjustHeight(Symbolsize) / 2), this);
         }
 
         if (this.gameWon == true) {
-            g.drawImage(TickImage, GameSettings.AdjustWidth(384), GameSettings.AdjustHeight(384), this);
+            g.drawImage(TickImage, gameSettings.AdjustWidth(384), gameSettings.AdjustHeight(384), this);
         }
 
         if (this.gameLost == true) {
-            g.drawImage(CrossImage, GameSettings.AdjustWidth(220), GameSettings.AdjustHeight(220), this);
+            g.drawImage(CrossImage, gameSettings.AdjustWidth(220), gameSettings.AdjustHeight(220), this);
         }
 
     }
