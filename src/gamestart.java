@@ -6,7 +6,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.sound.sampled.*;
 
-public class GameStart extends JPanel {
+public class gamestart extends JPanel {
     public GameMinesweeper Game = new GameMinesweeper();
 
     private static final int Symbolsize = 90;
@@ -85,7 +85,7 @@ enum ButtonImport {
         }
     }
     
-    public GameStart(boolean music, int numMines) {
+    public gamestart(boolean music, int numMines) {
         Game.numMines = numMines;
 
         this.BGMOn = music;
