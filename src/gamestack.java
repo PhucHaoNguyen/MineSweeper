@@ -1,6 +1,6 @@
 import java.util.Stack;
 
-public class gamestack {
+public class GameStack {
     private char[][] board;
     private boolean[][] revealed;
     private boolean[][] mines;
@@ -11,7 +11,7 @@ public class gamestack {
     private Stack<boolean[][]> minesStack;
     private Stack<Integer> numRevealedStack;
 
-    public gamestack(char[][] board, boolean[][] revealed, boolean[][] mines) {
+    public GameStack(char[][] board, boolean[][] revealed, boolean[][] mines) {
         this.board = board;
         this.revealed = revealed;
         this.mines = mines;

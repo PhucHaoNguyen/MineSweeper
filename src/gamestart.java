@@ -3,11 +3,11 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
-import javax.sound.sampled.*;
 import javax.swing.*;
+import javax.sound.sampled.*;
 
-public class gamestart extends JPanel {
-    public minesweeper Game = new minesweeper();
+public class GameStart extends JPanel {
+    public GameMinesweeper Game = new GameMinesweeper();
 
     private static final int Symbolsize = 90;
 
@@ -41,7 +41,7 @@ public class gamestart extends JPanel {
             return imagePath;
         }
     }
-    
+
     enum ButtonImport {
         QUIT("images/QuitButton.png", 120, 124),
         FLAG("images/FlagButton.png", 140, 140),
@@ -63,12 +63,12 @@ public class gamestart extends JPanel {
             return this.path;
         }
 
-        public int getheight() {
-            return height;
-        }
-
         public int getwidth() {
             return width;
+        }
+
+        public int getheight() {
+            return height;
         }
     }
 
@@ -85,18 +85,18 @@ public class gamestart extends JPanel {
     private boolean gameLost = false;
 
     private Point flagLocation = null;
-    
-    public gamestart(boolean music, int numMines) {
+
+    public GameStart(boolean music, int numMines) {
         Game.numMines = numMines;
 
         this.BGMOn = music;
 
-        setPreferredSize(new Dimension(gameSettings.WIDTH, gameSettings.HEIGHT));
+        setPreferredSize(new Dimension(gamesettings.WIDTH, gamesettings.HEIGHT));
 
         try {
             File GamePlay = new File("images/GamePlay.png");
             BufferedImage GamePlayOriginal = ImageIO.read(GamePlay);
-            Image scaledMenu = GamePlayOriginal.getScaledInstance(gameSettings.WIDTH, gameSettings.HEIGHT,
+            Image scaledMenu = GamePlayOriginal.getScaledInstance(gamesettings.WIDTH, gamesettings.HEIGHT,
                     Image.SCALE_SMOOTH);
             GameImage = scaledMenu;
 
@@ -108,13 +108,13 @@ public class gamestart extends JPanel {
                 if (button == ButtonImport.MUSIC_ON || button == ButtonImport.MUSIC_OFF
                         || button == ButtonImport.QUIT || button == ButtonImport.UNDO || button == ButtonImport.FLAG) {
                     scaledButton = buttonOriginal.getScaledInstance(
-                            gameSettings.AdjustWidth(128),
-                            gameSettings.AdjustHeight(128),
+                            gamesettings.AdjustWidth(128),
+                            gamesettings.AdjustHeight(128),
                             Image.SCALE_SMOOTH);
                 } else {
                     scaledButton = buttonOriginal.getScaledInstance(
-                            gameSettings.AdjustWidth(443),
-                            gameSettings.AdjustHeight(124),
+                            gamesettings.AdjustWidth(443),
+                            gamesettings.AdjustHeight(124),
                             Image.SCALE_SMOOTH);
                 }
 
@@ -136,8 +136,8 @@ public class gamestart extends JPanel {
                         break;
                 }
             }
-            
-    File bgm = new File("sounds/Music.wav");
+
+            File bgm = new File("sounds/Music.wav");
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(bgm);
 
             musicClip = AudioSystem.getClip();
@@ -150,15 +150,15 @@ public class gamestart extends JPanel {
 
             File TickSign = new File("images/Tick.png");
             BufferedImage TickSignOriginal = ImageIO.read(TickSign);
-            Image scaledTick = TickSignOriginal.getScaledInstance(gameSettings.AdjustWidth(392),
-                    gameSettings.AdjustHeight(368),
+            Image scaledTick = TickSignOriginal.getScaledInstance(gamesettings.AdjustWidth(392),
+                    gamesettings.AdjustHeight(368),
                     Image.SCALE_SMOOTH);
             TickImage = scaledTick;
 
             File CrossSign = new File("images/Cross.png");
             BufferedImage CrossSignOriginal = ImageIO.read(CrossSign);
-            Image scaledCross = CrossSignOriginal.getScaledInstance(gameSettings.AdjustWidth(640),
-                    gameSettings.AdjustHeight(640),
+            Image scaledCross = CrossSignOriginal.getScaledInstance(gamesettings.AdjustWidth(640),
+                    gamesettings.AdjustHeight(640),
                     Image.SCALE_SMOOTH);
             CrossImage = scaledCross;
 
@@ -166,8 +166,8 @@ public class gamestart extends JPanel {
                 File symbolFile = new File(symbolType.getImagePath());
                 BufferedImage symbolImageOriginal = ImageIO.read(symbolFile);
                 Image scaledSymbol = symbolImageOriginal.getScaledInstance(
-                        gameSettings.AdjustWidth(Symbolsize),
-                        gameSettings.AdjustHeight(Symbolsize),
+                        gamesettings.AdjustWidth(Symbolsize),
+                        gamesettings.AdjustHeight(Symbolsize),
                         Image.SCALE_SMOOTH);
                 symbolImages[symbolType.ordinal()] = scaledSymbol;
             }
@@ -175,7 +175,7 @@ public class gamestart extends JPanel {
         } catch (Exception e) {
             System.out.println("Exception found: " + e);
         }
-        
+
         Game.initializeBoard();
 
         addMouseListener(new MouseAdapter() {
@@ -184,10 +184,10 @@ public class gamestart extends JPanel {
                 int mouseX = e.getX();
                 int mouseY = e.getY();
                 if (!gameWon && !gameLost) {
-                    if (mouseX >= gameSettings.AdjustWidth(1742)
-                            && mouseX <= gameSettings.AdjustWidth(1742) + gameSettings.AdjustWidth(140)
-                            && mouseY >= gameSettings.AdjustHeight(38)
-                            && mouseY <= gameSettings.AdjustHeight(38) + gameSettings.AdjustHeight(140)) {
+                    if (mouseX >= gamesettings.AdjustWidth(1742)
+                            && mouseX <= gamesettings.AdjustWidth(1742) + gamesettings.AdjustWidth(140)
+                            && mouseY >= gamesettings.AdjustHeight(38)
+                            && mouseY <= gamesettings.AdjustHeight(38) + gamesettings.AdjustHeight(140)) {
                         BGMOn = !BGMOn;
                         if (BGMOn) {
                             musicClip.start();
@@ -197,20 +197,20 @@ public class gamestart extends JPanel {
                         repaint();
                     }
 
-                    if (mouseX >= gameSettings.AdjustWidth(1080)
-                            && mouseX <= gameSettings.AdjustWidth(1080 + UndoImage.getWidth(null))
-                            && mouseY >= gameSettings.AdjustHeight(698)
-                            && mouseY <= gameSettings.AdjustHeight(698 + UndoImage.getHeight(null))) {
+                    if (mouseX >= gamesettings.AdjustWidth(1080)
+                            && mouseX <= gamesettings.AdjustWidth(1080 + UndoImage.getWidth(null))
+                            && mouseY >= gamesettings.AdjustHeight(698)
+                            && mouseY <= gamesettings.AdjustHeight(698 + UndoImage.getHeight(null))) {
                         Game.Undo();
                         repaint();
                     }
 
-                    if (mouseX >= gameSettings.AdjustWidth(Symbolsize)
-                            && mouseX <= gameSettings.AdjustWidth(Symbolsize * 11)
-                            && mouseY >= gameSettings.AdjustHeight(Symbolsize)
-                            && mouseY <= gameSettings.AdjustHeight(Symbolsize * 11)) {
-                        int row = (int) (mouseY / gameSettings.AdjustHeight(Symbolsize)) - 1;
-                        int col = (int) (mouseX / gameSettings.AdjustWidth(Symbolsize)) - 1;
+                    if (mouseX >= gamesettings.AdjustWidth(Symbolsize)
+                            && mouseX <= gamesettings.AdjustWidth(Symbolsize * 11)
+                            && mouseY >= gamesettings.AdjustHeight(Symbolsize)
+                            && mouseY <= gamesettings.AdjustHeight(Symbolsize * 11)) {
+                        int row = (int) (mouseY / gamesettings.AdjustHeight(Symbolsize)) - 1;
+                        int col = (int) (mouseX / gamesettings.AdjustWidth(Symbolsize)) - 1;
 
                         Game.Save();
 
@@ -240,10 +240,10 @@ public class gamestart extends JPanel {
                     }
                 }
 
-                if (mouseX >= gameSettings.AdjustWidth(1080)
-                        && mouseX <= gameSettings.AdjustWidth(1080 + UndoImage.getWidth(null))
-                        && mouseY >= gameSettings.AdjustHeight(858)
-                        && mouseY <= gameSettings.AdjustHeight(858 + UndoImage.getHeight(null))) {
+                if (mouseX >= gamesettings.AdjustWidth(1080)
+                        && mouseX <= gamesettings.AdjustWidth(1080 + UndoImage.getWidth(null))
+                        && mouseY >= gamesettings.AdjustHeight(858)
+                        && mouseY <= gamesettings.AdjustHeight(858 + UndoImage.getHeight(null))) {
                     System.exit(0);
                 }
             }
@@ -254,10 +254,10 @@ public class gamestart extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (!gameWon && !gameLost) {
-                    if (e.getX() >= gameSettings.AdjustWidth(1578)
-                            && e.getX() <= gameSettings.AdjustWidth(1578) + gameSettings.AdjustWidth(140)
-                            && e.getY() >= gameSettings.AdjustHeight(38)
-                            && e.getY() <= gameSettings.AdjustHeight(38) + gameSettings.AdjustHeight(140)) {
+                    if (e.getX() >= gamesettings.AdjustWidth(1578)
+                            && e.getX() <= gamesettings.AdjustWidth(1578) + gamesettings.AdjustWidth(140)
+                            && e.getY() >= gamesettings.AdjustHeight(38)
+                            && e.getY() <= gamesettings.AdjustHeight(38) + gamesettings.AdjustHeight(140)) {
                         flagLocation = e.getPoint();
                     }
                 }
@@ -269,12 +269,12 @@ public class gamestart extends JPanel {
                     int x = e.getX();
                     int y = e.getY();
 
-                    if (x >= gameSettings.AdjustWidth(Symbolsize)
-                            && x <= gameSettings.AdjustWidth(Symbolsize * 11)
-                            && y >= gameSettings.AdjustHeight(Symbolsize)
-                            && y <= gameSettings.AdjustHeight(Symbolsize * 11)) {
-                        int row = (int) (y / gameSettings.AdjustHeight(Symbolsize)) - 1;
-                        int col = (int) (x / gameSettings.AdjustWidth(Symbolsize)) - 1;
+                    if (x >= gamesettings.AdjustWidth(Symbolsize)
+                            && x <= gamesettings.AdjustWidth(Symbolsize * 11)
+                            && y >= gamesettings.AdjustHeight(Symbolsize)
+                            && y <= gamesettings.AdjustHeight(Symbolsize * 11)) {
+                        int row = (int) (y / gamesettings.AdjustHeight(Symbolsize)) - 1;
+                        int col = (int) (x / gamesettings.AdjustWidth(Symbolsize)) - 1;
                         Game.Save();
                         if (Game.board[row][col] == '-') {
                             Game.board[row][col] = 'F';
@@ -306,30 +306,30 @@ public class gamestart extends JPanel {
         g.drawImage(GameImage, 0, 0, this);
 
         if (BGMOn) {
-            g.drawImage(MusicOnImage, gameSettings.AdjustWidth(1742), gameSettings.AdjustHeight(38), this);
+            g.drawImage(MusicOnImage, gamesettings.AdjustWidth(1742), gamesettings.AdjustHeight(38), this);
         } else {
-            g.drawImage(MusicOffImage, gameSettings.AdjustWidth(1742), gameSettings.AdjustHeight(38), this);
+            g.drawImage(MusicOffImage, gamesettings.AdjustWidth(1742), gamesettings.AdjustHeight(38), this);
         }
 
-        g.drawImage(FlagButtonImage, gameSettings.AdjustWidth(1578), gameSettings.AdjustHeight(38), this);
-        g.drawImage(UndoImage, gameSettings.AdjustWidth(1080), gameSettings.AdjustHeight(698), this);
-        g.drawImage(QuitImage, gameSettings.AdjustWidth(1080), gameSettings.AdjustHeight(858), this);
+        g.drawImage(FlagButtonImage, gamesettings.AdjustWidth(1578), gamesettings.AdjustHeight(38), this);
+        g.drawImage(UndoImage, gamesettings.AdjustWidth(1080), gamesettings.AdjustHeight(698), this);
+        g.drawImage(QuitImage, gamesettings.AdjustWidth(1080), gamesettings.AdjustHeight(858), this);
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if (Game.mines[row][col] && (revealAll || Game.revealed[row][col])) {
                     g.drawImage(symbolImages[SymbolImport.MINE.ordinal()],
-                            gameSettings.AdjustWidth(Symbolsize * (col + 1)),
-                            gameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                            gamesettings.AdjustWidth(Symbolsize * (col + 1)),
+                            gamesettings.AdjustHeight(Symbolsize * (row + 1)), this);
                 }
 
                 else if (Game.board[row][col] == 'F') {
                     g.drawImage(symbolImages[SymbolImport.UNREVEALED.ordinal()],
-                            gameSettings.AdjustWidth(Symbolsize * (col + 1)),
-                            gameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                            gamesettings.AdjustWidth(Symbolsize * (col + 1)),
+                            gamesettings.AdjustHeight(Symbolsize * (row + 1)), this);
                     g.drawImage(symbolImages[SymbolImport.FLAG.ordinal()],
-                            gameSettings.AdjustWidth(Symbolsize * (col + 1)),
-                            gameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                            gamesettings.AdjustWidth(Symbolsize * (col + 1)),
+                            gamesettings.AdjustHeight(Symbolsize * (row + 1)), this);
                 }
 
                 else if (Game.revealed[row][col]) {
@@ -365,31 +365,31 @@ public class gamestart extends JPanel {
 
                     if (symbolType != null) {
                         g.drawImage(symbolImages[symbolType.ordinal()],
-                                gameSettings.AdjustWidth(Symbolsize * (col + 1)),
-                                gameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                                gamesettings.AdjustWidth(Symbolsize * (col + 1)),
+                                gamesettings.AdjustHeight(Symbolsize * (row + 1)), this);
                     }
                 }
 
                 else {
                     g.drawImage(symbolImages[SymbolImport.UNREVEALED.ordinal()],
-                            gameSettings.AdjustWidth(Symbolsize * (col + 1)),
-                            gameSettings.AdjustHeight(Symbolsize * (row + 1)), this);
+                            gamesettings.AdjustWidth(Symbolsize * (col + 1)),
+                            gamesettings.AdjustHeight(Symbolsize * (row + 1)), this);
                 }
             }
         }
 
         if (flagLocation != null) {
             g.drawImage(symbolImages[SymbolImport.FLAG.ordinal()],
-                    (int) flagLocation.getX() - (int) (gameSettings.AdjustWidth(Symbolsize) / 2),
-                    (int) flagLocation.getY() - (int) (gameSettings.AdjustHeight(Symbolsize) / 2), this);
+                    (int) flagLocation.getX() - (int) (gamesettings.AdjustWidth(Symbolsize) / 2),
+                    (int) flagLocation.getY() - (int) (gamesettings.AdjustHeight(Symbolsize) / 2), this);
         }
 
         if (this.gameWon == true) {
-            g.drawImage(TickImage, gameSettings.AdjustWidth(384), gameSettings.AdjustHeight(384), this);
+            g.drawImage(TickImage, gamesettings.AdjustWidth(384), gamesettings.AdjustHeight(384), this);
         }
 
         if (this.gameLost == true) {
-            g.drawImage(CrossImage, gameSettings.AdjustWidth(220), gameSettings.AdjustHeight(220), this);
+            g.drawImage(CrossImage, gamesettings.AdjustWidth(220), gamesettings.AdjustHeight(220), this);
         }
 
     }

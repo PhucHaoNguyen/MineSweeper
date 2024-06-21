@@ -177,7 +177,7 @@ public class gameMainMenu extends JPanel {
                                     + gameSettings.AdjustHeight(124)) {
                         savedMusicOn = MusicOn;
                         musicClip.stop();
-                        JPanel gameStart = new gamestart(savedMusicOn, level.getMines());
+                        JPanel gameStart = new GameStart(savedMusicOn, level.getMines());
                         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(gameMainMenu.this);
                         frame.setContentPane(gameStart);
                         frame.pack();
